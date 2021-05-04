@@ -1,0 +1,6 @@
+name: candywrapper
+services:
+- name: web
+  github:
+    repo: digitalocean/candywrapper
+    branch: main
