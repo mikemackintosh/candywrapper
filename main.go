@@ -32,11 +32,12 @@ func main() {
 	// Listen on all requests
 	e.Any("/*", func(c echo.Context) error {
 		e.Logger.SetLevel(log.INFO)
-		e.Logger.Info(map[string]string{"i": "request received", "c.Request().Host": c.Request().Host})
-		e.Logger.Info(map[string]string{"i": "request received", "c.Request().URL.Host": c.Request().URL.Host})
+		e.Logger.Info(map[string]string{"event": "request_received", "from_host": c.Request().Host})
 
-		redirect := mappings[c.Request().Host]
-		e.Logger.Info(redirect)
+		redirect := mappings["default"]
+		if v, ok := mappings[c.Request().Host]; ok {
+			redirect = v
+		}
 
 		c.Redirect(redirect.Code, redirect.URL)
 		return nil
