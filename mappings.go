@@ -33,4 +33,10 @@ var mappings = map[string]Redirect{
 		Code: http.StatusMovedPermanently,
 		URL:  "https://mikemackintosh.com",
 	},
+	
+	//
+	"default": Redirect{
+		Code: http.StatusMovedPermanently,
+		URL:  "https://mikemackintosh.com",
+	},
 }
