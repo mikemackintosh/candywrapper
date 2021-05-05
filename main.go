@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
 )
 
 // Redirect contains the required details for making a redirect.
@@ -15,30 +15,11 @@ type Redirect struct {
 	URL  string
 }
 
-// Mapping of redirects
-var mappings = map[string]Redirect{
-	//
-	"www.mikemackintosh.com": Redirect{
-		Code: http.StatusMovedPermanently,
-		URL:  "https://mikemackintosh.com",
-	},
-	//
-	"www.highonphp.com": Redirect{
-		Code: http.StatusMovedPermanently,
-		URL:  "https://mikemackintosh.com",
-	},
-	//
-	"highonphp.com": Redirect{
-		Code: http.StatusMovedPermanently,
-		URL:  "https://mikemackintosh.com",
-	},
-}
-
 // Start start package
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "80"
+		port = "8080"
 	}
 
 	e := echo.New()
@@ -50,9 +31,13 @@ func main() {
 
 	// Listen on all requests
 	e.Any("/*", func(c echo.Context) error {
-		//validateDNS(c.Request().Host)
-		// e.Pre(middleware.HTTPSNonWWWRedirect())
+		e.Logger.SetLevel(log.INFO)
+		e.Logger.Info(map[string]string{"i": "request received", "c.Request().Host": c.Request().Host})
+		e.Logger.Info(map[string]string{"i": "request received", "c.Request().URL.Host": c.Request().URL.Host})
+
 		redirect := mappings[c.Request().Host]
+		e.Logger.Info(redirect)
+
 		c.Redirect(redirect.Code, redirect.URL)
 		return nil
 	})
